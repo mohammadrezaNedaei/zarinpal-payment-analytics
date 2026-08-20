@@ -42,23 +42,27 @@ export async function getMerchants(): Promise<Merchant[]> {
   return mockMerchants;
 }
 
-export async function getOverview(params: QueryParams = {}): Promise<Overview> {
+// نکته: پارامترهای QueryParams تا اتصال به API واقعی استفاده نمی‌شوند؛
+// پیشوند `_` نشان‌گر عمدی بودن این موضوع است (noUnusedParameters).
+// وقتی fetch اضافه شد، همین پارامترها به query-string تبدیل می‌شوند.
+
+export async function getOverview(_params: QueryParams = {}): Promise<Overview> {
   return mockOverview;
 }
 
-export async function getPaymentHealth(params: QueryParams = {}): Promise<PaymentHealth> {
+export async function getPaymentHealth(_params: QueryParams = {}): Promise<PaymentHealth> {
   return mockPaymentHealth;
 }
 
-export async function getFunnel(params: QueryParams = {}): Promise<PaymentHealth["funnel"]> {
+export async function getFunnel(_params: QueryParams = {}): Promise<PaymentHealth["funnel"]> {
   return mockPaymentHealth.funnel;
 }
 
-export async function getRetryAnalysis(params: QueryParams = {}): Promise<RetryAnalysis> {
+export async function getRetryAnalysis(_params: QueryParams = {}): Promise<RetryAnalysis> {
   return mockRetryAnalysis;
 }
 
-export async function getInsights(params: QueryParams = {}): Promise<Insight[]> {
+export async function getInsights(_params: QueryParams = {}): Promise<Insight[]> {
   return mockInsights;
 }
 
@@ -70,11 +74,12 @@ export async function getInsightDetail(insightId: string): Promise<Insight> {
   return insight;
 }
 
-export async function getInsightTrace(insightId: string): Promise<Trace> {
+export async function getInsightTrace(_insightId: string): Promise<Trace> {
   // در نسخه mock، trace مستقل از insightId است تا رابط ساده بماند.
+  // وقتی API واقعی آمد، همین شناسه به مسیر Trace ارسال می‌شود.
   return mockTrace;
 }
 
-export async function getTrace(params: QueryParams = {}): Promise<Trace> {
+export async function getTrace(_params: QueryParams = {}): Promise<Trace> {
   return mockTrace;
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, CircleDollarSign, SearchX } from "lucide-react";
+import { ArrowLeft, CircleDollarSign } from "lucide-react";
 import type { Insight, InsightSeverity } from "@/api/types";
 import { getInsights } from "@/api/adapter";
 import { getInsightPath } from "@/lib/navigation";

@@ -38,6 +38,7 @@ export const mockRetryAnalysis: RetryAnalysis = {
       retriedSessionCount: 21_000,
       recoveredSessionCount: 14_500,
       recoveredAmount: 218_000_000,
+      currency: "IRR",
       recoveryRate: 0.69,
     },
     {
@@ -49,6 +50,7 @@ export const mockRetryAnalysis: RetryAnalysis = {
       retriedSessionCount: 26_500,
       recoveredSessionCount: 12_800,
       recoveredAmount: 152_000_000,
+      currency: "IRR",
       recoveryRate: 0.48,
     },
     {
@@ -60,6 +62,7 @@ export const mockRetryAnalysis: RetryAnalysis = {
       retriedSessionCount: 9_200,
       recoveredSessionCount: 5_700,
       recoveredAmount: 45_000_000,
+      currency: "IRR",
       recoveryRate: 0.62,
     },
   ],
