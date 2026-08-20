@@ -62,6 +62,14 @@ npm run build
 - **PagePlaceholder:** کامپوننت «در حال ساخت» با ماژول‌های برنامه‌ریزی‌شده هر صفحه + نشان فیلترهای فعلی — تضمین می‌کند هیچ صفحه‌ای به‌عنوان کامل تحویل داده نشود.
 - **پنج صفحه placeholder:** overview، payment-health، retry-analysis، insights و trace — هر کدام با شرح ماژول‌های برنامه‌ریزی‌شده (Task 5 تا 9).
 
+### Task 9 — Trace و Evidence (کامل)
+
+- **TraceDetail:** ۴ کارت: تعریف معیار (نام، نسخه، سطح محاسبه، نسخه دیتاست، ingestion، قالب query) + صورت و مخرج با فرمول‌های انسانی + فیلترهای اعمال‌شده (چیپ‌ها) + پوشش داده/رکوردهای ورودی/خروجی/حذف‌شده با دلایل حذف.
+- **EvidenceTable:** جدول شواهد (وضعیت، sessionKey، trySeq، مبلغ، PSP، بانک، زمان تأیید، شامل/حذف با دلیل) + pagination ساده (۵ در صفحه) و دکمه‌های صفحه با aria-label.
+- **صفحه Trace:** خواندن از `getTrace`؛ ناحیه سهم عوامل (breakdown contribution) با هشدار «نسبت‌ها رابطه علّی قطعی را اثبات نمی‌کنند»؛ حالت‌های loading/error.
+- **روتینگ:** مسیر `/insights/:insightId/trace` اضافه شد؛ `getInsightTracePath` در navigation.ts؛ صفحه جزئیات بینش به ردیابی همان بینش لینک می‌دهد.
+- فایل‌های جدید: `components/dashboard/{trace-detail,evidence-table}.tsx`؛ بازنویسی: `pages/trace-page.tsx`.
+
 ### Task 8 — Insights Experience (کامل)
 
 - **ماژول `lib/severity.ts`:** متادیتای مشترک severity (برچسب فارسی + کلاس‌های رنگی)، ترتیب اولویت و گزینه‌های فیلتر — تکرار در recent-insights حذف شد و به آن وصل شد.
@@ -141,7 +149,9 @@ frontend/
     │   │   ├── psp-comparison.tsx      # مقایسه PSP (میله‌ای RTL)
     │   │   ├── funnel-chart.tsx        # قیف پرداخت
     │   │   ├── retry-cards.tsx         # کارت‌های تحلیل تلاش مجدد
-    │   │   └── retry-breakdown-table.tsx # جدول تفکیکی تلاش مجدد
+    │   │   ├── retry-breakdown-table.tsx # جدول تفکیکی تلاش مجدد
+    │   │   ├── trace-detail.tsx        # تعریف معیار/فیلتر/پوشش trace
+    │   │   └── evidence-table.tsx      # جدول شواهد با pagination
     │   ├── layout/
     │   │   ├── app-shell.tsx       # چیدمان کلی: Sidebar + MobileNav + TopBar + PageHeader
     │   │   ├── sidebar.tsx         # سایدبار دسکتاپ
@@ -179,10 +189,10 @@ frontend/
 
 ## 7. گام پیشنهادی بعدی
 
-**Task 9: Trace و Evidence**
-- صفحه/کشوی trace با تعریف معیار (نسخه، سطح محاسبه، فرمول)، فیلترها، پوشش داده، جدول شواهد با pagination — خواندن از `getTrace`/`getInsightTrace`؛ صفحه جزئیات بینش به trace متصل می‌شود.
+**Task 10: Responsive و کیفیت**
+- بازبینی RTL و responsiveness در چهار عرض (موبایل/تبلت/لپ‌تاپ/دسکتاپ عریض)؛ کنتراست، ناوبری کیبورد، حالت‌های loading/empty/error، و یکدستی بصری کل صفحات.
 
-سپس Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
+سپس Task 11 (README و تحویل نهایی).
 
 ## 8. مستندات مرجع
 

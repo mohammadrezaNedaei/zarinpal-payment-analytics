@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArrowRight, CircleDollarSign, ListChecks, Scale, SlidersHorizontal } from "lucide-react";
 import type { Insight } from "@/api/types";
 import { getInsightDetail } from "@/api/adapter";
-import { appRoutes } from "@/lib/navigation";
+import { appRoutes, getInsightTracePath } from "@/lib/navigation";
 import { SEVERITY_META } from "@/lib/severity";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -174,10 +174,10 @@ export function InsightDetailPage() {
           بازه: {formatDateRange(insight.period)}
         </span>
         <a
-          href={appRoutes.trace}
+          href={getInsightTracePath(insight.id)}
           onClick={(event) => {
             event.preventDefault();
-            navigate(appRoutes.trace);
+            navigate(getInsightTracePath(insight.id));
           }}
           className="inline-flex min-h-9 items-center gap-1 rounded-md border border-border px-3 text-xs text-foreground transition-colors hover:bg-muted"
         >

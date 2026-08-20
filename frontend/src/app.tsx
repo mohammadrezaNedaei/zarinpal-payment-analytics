@@ -29,6 +29,7 @@ export function App() {
     { path: appRoutes.insights, element: <InsightsPage /> },
     { path: "/insights/:insightId", element: <InsightDetailPage /> },
     { path: appRoutes.trace, element: <TracePage /> },
+    { path: "/insights/:insightId/trace", element: <TracePage /> },
     { path: appRoutes.design, element: <DesignPage /> },
     { path: "*", element: <OverviewPage /> },
   ]);

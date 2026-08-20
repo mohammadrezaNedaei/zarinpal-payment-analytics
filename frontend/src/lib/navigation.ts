@@ -15,6 +15,11 @@ export function getInsightPath(insightId: string): string {
   return `/insights/${encodeURIComponent(insightId)}`;
 }
 
+/** مسیر ردیابی محاسبه (trace) یک بینش. */
+export function getInsightTracePath(insightId: string): string {
+  return `${getInsightPath(insightId)}/trace`;
+}
+
 export type AppRouteKey = keyof typeof appRoutes;
 
 type NavigationItem = {
