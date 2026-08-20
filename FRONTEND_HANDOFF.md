@@ -62,7 +62,14 @@ npm run build
 - **PagePlaceholder:** کامپوننت «در حال ساخت» با ماژول‌های برنامه‌ریزی‌شده هر صفحه + نشان فیلترهای فعلی — تضمین می‌کند هیچ صفحه‌ای به‌عنوان کامل تحویل داده نشود.
 - **پنج صفحه placeholder:** overview، payment-health، retry-analysis، insights و trace — هر کدام با شرح ماژول‌های برنامه‌ریزی‌شده (Task 5 تا 9).
 
-### Task 4 — Data Boundary و Mock Data (کامل)
+### Task 5 — Overview Dashboard (کامل)
+
+- **KpiCard:** ۴ کارت (فروش موفق، نرخ موفقیت، نرخ تلاش مجدد، مبلغ در معرض ازدست‌رفتن) با نمایش تغییر نسبت به دوره قبل (فلش سبز/قرمز/خنثی) و اعداد فارسی.
+- **TrendChart (SVG دستی):** کامپوننت `LineChart` در `src/components/charts/line-chart.tsx` (بدون dependency جدید) — انتخاب کاربر: SVG دستی به‌جای Recharts (بدون نصب)؛ نمودار روند نرخ موفقیت با برچسب روزهای فارسی.
+- **HealthSummary:** نرخ موفقیت کل، تغییر نسبت به دوره قبل، تعداد PSPهای پایدار/توجه/بحرانی + «مبلغ در معرض ازدست‌رفتن (بالقوه)» با هشدار شفاف.
+- **RecentInsights:** بینش‌های اخیر با severity badge و اثر مالی؛ کلیک → آماده‌سازی برای Task 8.
+- **خواندن داده از آداپتر:** `getOverview` + `getPaymentHealth` + `getInsights` با `Promise.all`؛ حالت loading (Skeleton)، error (DataState + تلاش دوباره)؛ empty تعریف‌شده (کارت خالی برای بینش‌ها).
+- فایل‌های جدید: `components/charts/line-chart.tsx`، `components/dashboard/{kpi-card,trend-chart,health-summary,recent-insights}.tsx`؛ صفحه `pages/overview-page.tsx` بازنویسی کامل.
 
 - **قراردادهای TypeScript** در `src/api/types.ts`: `Merchant`، `KpiMetric`، `FunnelStage`، `RetryAnalysis`، `Insight` (دقیقاً طبق قرارداد استاندارد سند Backend بخش ۱۲)، `Trace` (بخش ۱۳)، `Overview`، `PaymentHealth`، `ApiError`، `DateRange`.
   - قواعد: درصد بین صفر و یک؛ مبلغ integer با currency جدا؛ `severity` از union محدود (`low|medium|high|critical`)؛ شمارش یک‌باره `session_key`؛ تفکیک «مبلغ در معرض ازدست‌رفتن» از زیان قطعی.
@@ -98,6 +105,13 @@ frontend/
     │   └── retry.ts                # تحلیل تلاش مجدد
     ├── components/
     │   ├── design-system-showcase.tsx
+    │   ├── charts/
+    │   │   └── line-chart.tsx          # نمودار خطی SVG سبک (بدون وابستگی)
+    │   ├── dashboard/
+    │   │   ├── kpi-card.tsx            # کارت KPI + Skeleton
+    │   │   ├── trend-chart.tsx         # نمودار روند (پوسته LineChart)
+    │   │   ├── health-summary.tsx      # خلاصه سلامت پرداخت
+    │   │   └── recent-insights.tsx     # لیست بینش‌های اخیر
     │   ├── layout/
     │   │   ├── app-shell.tsx       # چیدمان کلی: Sidebar + MobileNav + TopBar + PageHeader
     │   │   ├── sidebar.tsx         # سایدبار دسکتاپ
@@ -135,12 +149,11 @@ frontend/
 
 ## 7. گام پیشنهادی بعدی
 
-**Task 5: Overview Dashboard**
-- کارت‌های KPI (فروش موفق، نرخ موفقیت، نرخ تلاش مجدد، مبلغ در معرض ازدست‌رفتن) از طریق `getOverview` و `getInsights`.
-- خلاصه سلامت پرداخت، بینش‌های اخیر و نمودار روند.
-- حالت‌های loading، empty و error با `DataState`.
+**Task 6: Payment Health و Funnel**
+- نرخ موفقیت، مقایسه PSP (میله‌ای SVG) و قیف پرداخت (FunnelChart).
+- تفکیک صریح «مبلغ در معرض ازدست‌رفتن» از زیان قطعی (طبق سند Backend).
 
-سپس به ترتیب Task 6 (Payment Health و Funnel)، Task 7 (Retry Analysis)، Task 8 (Insights)، Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
+سپس به ترتیب Task 7 (Retry Analysis)، Task 8 (Insights)، Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
 
 ## 8. مستندات مرجع
 
