@@ -2,7 +2,7 @@
 
 **پروژه:** داشبورد تحلیل پرداخت زرین‌پال
 **تاریخ:** 2026-08-20
-**دامنه این سند:** فقط کارهای انجام‌شده تا پایان Task 3 فرانت‌اند؛ هیچ Backend یا API واقعی پیاده‌سازی نشده است.
+**دامنه این سند:** فقط کارهای انجام‌شده تا پایان Task 4 فرانت‌اند؛ هیچ Backend یا API واقعی پیاده‌سازی نشده است.
 
 ## 1. وضعیت اجرایی
 
@@ -62,6 +62,15 @@ npm run build
 - **PagePlaceholder:** کامپوننت «در حال ساخت» با ماژول‌های برنامه‌ریزی‌شده هر صفحه + نشان فیلترهای فعلی — تضمین می‌کند هیچ صفحه‌ای به‌عنوان کامل تحویل داده نشود.
 - **پنج صفحه placeholder:** overview، payment-health، retry-analysis، insights و trace — هر کدام با شرح ماژول‌های برنامه‌ریزی‌شده (Task 5 تا 9).
 
+### Task 4 — Data Boundary و Mock Data (کامل)
+
+- **قراردادهای TypeScript** در `src/api/types.ts`: `Merchant`، `KpiMetric`، `FunnelStage`، `RetryAnalysis`، `Insight` (دقیقاً طبق قرارداد استاندارد سند Backend بخش ۱۲)، `Trace` (بخش ۱۳)، `Overview`، `PaymentHealth`، `ApiError`، `DateRange`.
+  - قواعد: درصد بین صفر و یک؛ مبلغ integer با currency جدا؛ `severity` از union محدود (`low|medium|high|critical`)؛ شمارش یک‌باره `session_key`؛ تفکیک «مبلغ در معرض ازدست‌رفتن» از زیان قطعی.
+- **فیکسچرهای فارسی mock** در `src/mocks/`: `merchants.ts` (۳ پذیرنده ساختگی)، `insights.ts` (۳ بینش با severity/اثر مالی + trace با evidence و exclusionReasons)، `overview.ts` (KPIها + trend + recentInsights)، `retry.ts`، و `index.ts` به‌عنوان خروجی مرکزی.
+  - ⚠️ همه data «نمایشی» است و در کد/file کامنت هشدار دارد.
+- **لایه Adapter** در `src/api/adapter.ts`: فانکشن‌های async هم‌نام با APIهای آینده (`getMerchants`، `getOverview`، `getPaymentHealth`، `getFunnel`، `getRetryAnalysis`، `getInsights`، `getInsightDetail`، `getInsightTrace`، `getTrace`) که الان از mocks می‌خوانند. برای اتصال به Django فقط این فایل تغییر می‌کند؛ صفحات بدون تغییر می‌مانند.
+- **گیت:** کارهای Task 4 در یک commit واحد ثبت شدند (Commit 2).
+
 ## 4. فایل‌های کلیدی
 
 ```text
@@ -78,6 +87,15 @@ frontend/
     │   ├── utils.ts                # تابع cn
     │   ├── navigation.ts           # منبع حقیقت مسیرها و آیتم‌های ناوبری
     │   └── global-filters.tsx      # Context فیلترهای سراسری + کنترل‌های Select
+    ├── api/
+    │   ├── types.ts                # قراردادهای TypeScript (مرز داده، هماهنگ با Backend)
+    │   └── adapter.ts              # لایه data access (mock امروز، fetch به Django در آینده)
+    ├── mocks/
+    │   ├── index.ts                # خروجی مرکزی فیکسچرها
+    │   ├── merchants.ts            # پذیرنده‌های ساختگی
+    │   ├── insights.ts             # بینش‌ها + trace
+    │   ├── overview.ts             # KPIها + trend + recentInsights
+    │   └── retry.ts                # تحلیل تلاش مجدد
     ├── components/
     │   ├── design-system-showcase.tsx
     │   ├── layout/
@@ -117,12 +135,12 @@ frontend/
 
 ## 7. گام پیشنهادی بعدی
 
-**Task 4: Data boundary و mock data**
-- تعریف قراردادهای TypeScript منطبق بر BACKEND_IMPLEMENTATION_SPEC: merchant، KPI، funnel stage، retry analysis، insight و trace.
-- فیکسچرهای فارسی mock.
-- لایه adapter تا مبادله mocks با API واقعی (Django) بدون تغییر صفحات ممکن باشد.
+**Task 5: Overview Dashboard**
+- کارت‌های KPI (فروش موفق، نرخ موفقیت، نرخ تلاش مجدد، مبلغ در معرض ازدست‌رفتن) از طریق `getOverview` و `getInsights`.
+- خلاصه سلامت پرداخت، بینش‌های اخیر و نمودار روند.
+- حالت‌های loading، empty و error با `DataState`.
 
-سپس به ترتیب Task 5 (Overview)، Task 6 (Payment Health و Funnel)، Task 7 (Retry Analysis)، Task 8 (Insights)، Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
+سپس به ترتیب Task 6 (Payment Health و Funnel)، Task 7 (Retry Analysis)، Task 8 (Insights)، Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
 
 ## 8. مستندات مرجع
 
