@@ -62,6 +62,14 @@ npm run build
 - **PagePlaceholder:** کامپوننت «در حال ساخت» با ماژول‌های برنامه‌ریزی‌شده هر صفحه + نشان فیلترهای فعلی — تضمین می‌کند هیچ صفحه‌ای به‌عنوان کامل تحویل داده نشود.
 - **پنج صفحه placeholder:** overview، payment-health، retry-analysis، insights و trace — هر کدام با شرح ماژول‌های برنامه‌ریزی‌شده (Task 5 تا 9).
 
+### Task 7 — Retry Analysis (کامل)
+
+- **قرارداد:** `RetryBreakdownRow` به types.ts اضافه شد (PSP، بانک صادرکننده، کد پاسخ سوئیچ، تعداد سشن/تلاش مجدد/بازیابی‌شده، مبلغ بازیابی، نرخ بازیابی)؛ `breakdown: RetryBreakdownRow[]` به `RetryAnalysis` اضافه شد و mock تکمیل شد.
+- **RetryCards:** ۴ کارت (نرخ تلاش مجدد، نرخ بازیابی، مبلغ بازیابی‌شده، مبلغ در معرض ازدست‌رفتن) با آیکون و تغییر نسبت به دوره قبل؛ «در معرض ازدست‌رفتن» با رنگ قرمز و یادداشت «بالقوه — زیان قطعی نیست».
+- **RetryBreakdownTable:** جدول تفکیکی فارسی/دسترسی‌پذیر (thead با `th scope`، overflow-x برای موبایل) با ستون‌های PSP/بانک/کد پاسخ/سشن‌ها/با تلاش مجدد/بازیابی‌شده/نرخ بازیابی/مبلغ بازیابی‌شده + توضیح.
+- **صفحه RetryAnalysis:** خواندن از `getRetryAnalysis`؛ حالت‌های loading/error؛ ناحیه توضیح (تعریف نرخ تلاش مجدد و بازیابی و هشدار بالقوه بودن مبلغ).
+- فایل‌های جدید: `components/dashboard/{retry-cards,retry-breakdown-table}.tsx`؛ صفحه `pages/retry-analysis-page.tsx` بازنویسی.
+
 ### Task 6 — Payment Health و Funnel (کامل)
 
 - **PspComparison:** مقایسه PSPها با میله‌های افقی RTL (سهم سشن‌ها + نرخ موفقیت + وضعیت پایدار/توجه/بحرانی) و «مبلغ در معرض ازدست‌رفتن» هر PSP.
@@ -121,7 +129,9 @@ frontend/
     │   │   ├── health-summary.tsx      # خلاصه سلامت پرداخت
     │   │   ├── recent-insights.tsx     # لیست بینش‌های اخیر
     │   │   ├── psp-comparison.tsx      # مقایسه PSP (میله‌ای RTL)
-    │   │   └── funnel-chart.tsx        # قیف پرداخت
+    │   │   ├── funnel-chart.tsx        # قیف پرداخت
+    │   │   ├── retry-cards.tsx         # کارت‌های تحلیل تلاش مجدد
+    │   │   └── retry-breakdown-table.tsx # جدول تفکیکی تلاش مجدد
     │   ├── layout/
     │   │   ├── app-shell.tsx       # چیدمان کلی: Sidebar + MobileNav + TopBar + PageHeader
     │   │   ├── sidebar.tsx         # سایدبار دسکتاپ
@@ -159,10 +169,10 @@ frontend/
 
 ## 7. گام پیشنهادی بعدی
 
-**Task 7: Retry Analysis**
-- کارت‌های بازیابی (نرخ تلاش مجدد، نرخ بازیابی، مبلغ بازیابی‌شده، مبلغ در معرض ازدست‌رفتن)، جدول تفکیکی و حالت‌های توضیحی — خواندن از `getRetryAnalysis` و `getPaymentHealth`.
+**Task 8: Insights Experience**
+- لیست بینش‌ها با فیلتر بر اساس severity و نوع + صفحه/نمای جزئیات (خلاصه، اثر مالی، عوامل مرتبط، اقدام پیشنهادی، دسترسی به trace) — خواندن از `getInsights`، `getInsightDetail` و `getInsightTrace`.
 
-سپس Task 8 (Insights)، Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
+سپس Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
 
 ## 8. مستندات مرجع
 

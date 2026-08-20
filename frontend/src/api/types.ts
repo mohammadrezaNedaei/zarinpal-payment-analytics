@@ -62,6 +62,20 @@ export type FunnelStage = {
   currency: Currency;
 };
 
+/** یک ردیف تفکیکی تحلیل تلاش مجدد (بر اساس PSP/بانک/کد پاسخ). */
+export type RetryBreakdownRow = {
+  pspKey: string;
+  pspTitle: string;
+  issuerBankCode?: string;
+  switchResponseCode?: string;
+  sessionCount: number;
+  retriedSessionCount: number;
+  recoveredSessionCount: number;
+  recoveredAmount: number;
+  currency: Currency;
+  recoveryRate?: number; // ۰ تا ۱
+};
+
 /** تحلیل تلاش مجدد (Task 7). */
 export type RetryAnalysis = {
   retryRate: KpiMetric; // سشن‌های با بیش از یک تلاش / سشن‌های دارای تلاش واقعی
@@ -69,6 +83,7 @@ export type RetryAnalysis = {
   recoveredAmount: number;
   currency: Currency;
   atRiskAmount: number; // «در معرض از دست رفتن» — نه زیان قطعی
+  breakdown: RetryBreakdownRow[];
 };
 
 /** یک بینش (طبق قرارداد استاندارد سند، بخش 12). */
