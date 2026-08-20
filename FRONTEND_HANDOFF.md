@@ -62,6 +62,13 @@ npm run build
 - **PagePlaceholder:** کامپوننت «در حال ساخت» با ماژول‌های برنامه‌ریزی‌شده هر صفحه + نشان فیلترهای فعلی — تضمین می‌کند هیچ صفحه‌ای به‌عنوان کامل تحویل داده نشود.
 - **پنج صفحه placeholder:** overview، payment-health، retry-analysis، insights و trace — هر کدام با شرح ماژول‌های برنامه‌ریزی‌شده (Task 5 تا 9).
 
+### Task 11 — README و تحویل نهایی (کامل)
+
+- **`frontend/README.md`** ساخته شد: معرفی، نحوه اجرا، جدول صفحات، ساختار پروژه، مرز داده و نحوه اتصال Backend آینده، قراردادهای طراحی و نکات فنی.
+- **Build نهایی موفق:** `npm run build` اجرا و بدون خطا تمام شد (tsc + vite build، ۲۵۰۰+ ماژول). خروجی: `dist/` (JS ~452KB / gzip 137KB).
+- **رفع خطاهای تایپ build:** ۱۴ خطای تایپ در ۵ فایل رفع شد (variant `ghost` در Button، پارامترهای بلااستفاده در adapter با `_`، فیلد `currency` در مocks، import بلااستفاده).
+- **`FRONTEND_HANDOFF.md`** این سند به‌روزرسانی شد.
+
 ### Task 10 — Responsive و کیفیت (کامل)
 
 - **RTL نمودارها:** `LineChart` نقاط را برعکس می‌کند تا قدیمی‌ترین در راست و جدیدترین در چپ باشد (منطبق بر جهت RTL)؛ برچسب‌های TrendChart هم همراستا شدند.
@@ -165,7 +172,7 @@ frontend/
     │   ├── layout/
     │   │   ├── app-shell.tsx       # چیدمان کلی: Sidebar + MobileNav + TopBar + PageHeader
     │   │   ├── sidebar.tsx         # سایدبار دسکتاپ
-    │   │   ├── mobile-nav.tsx      # منوی موبایل (Dialog)
+    │   │   ├── mobile-nav.tsx      # منوی موبایل (details بومی + لایه بالا)
     │   │   ├── top-bar.tsx         # هدر بالا + کنترل‌های mock
     │   │   └── page-placeholder.tsx# الگوی صفحه در حال ساخت
     │   └── ui/                     # کامپوننت‌های Shadcn + data-state
@@ -173,10 +180,13 @@ frontend/
         ├── overview-page.tsx
         ├── payment-health-page.tsx
         ├── retry-analysis-page.tsx
-        ├── insights-page.tsx
-        ├── trace-page.tsx
-        └── design-page.tsx
+        ├── insights-page.tsx       # فهرست بینشها
+        ├── insight-detail-page.tsx # جزئیات بینش
+        ├── trace-page.tsx          # ردیابی محاسبه
+        └── design-page.tsx         # نمایشگاه سیستم طراحی
 ```
+
+ضمناً `frontend/README.md` برای تحویل نهایی ساخته شده است (بخش ۳).
 
 ## 5. قرارداد طراحی و کیفیت
 
@@ -190,14 +200,24 @@ frontend/
 
 ## 6. محدودیت‌ها و نکات مهم
 
-- Backend، API client، mock contract و داده‌های Dashboard هنوز ساخته نشده‌اند (Task 4 به بعد).
+- Backend و API واقعی هنوز ساخته نشده‌اند؛ همه داده‌ها mock است.
 - **فایل‌های باقی‌مانده starter قدیمی Vite (`src/main.ts`، `src/counter.ts`، `src/assets/`) هنوز بلااستفاده‌اند و حذف نشده‌اند؛ cleanup مستقل لازم است.**
 - لوگوی واقعی زرین‌پال اضافه نشده؛ برند فعلی Mark نمایشی است.
-- build پس از Task 3 هنوز اجرا نشده (محدودیت VM)؛ باید در اولین فرصت `npm run build` اجرا شود.
-- `main.tsx` جدید با BrowserRouter است؛ اگر هاست استاتیک باشد مسیرها نیاز به rewrites دارند (فعلاً dev و local کافی است).
+- `main.tsx` با BrowserRouter است؛ اگر هاست استاتیک باشد مسیرها نیاز به rewrites دارند (فعلاً dev و local کافی است).
 - تم فعلی dark-only است.
+- Build تولید با `npm run build` موفق تأیید شده است.
 
-## 7. گام پیشنهادی بعدی
+## 7. تحویل و گام‌های بعدی
+
+همه ۱۱ تسک فرانت‌اند انجام شده است. تحویل شامل:
+- `frontend/README.md` برای داور/توسعه‌دهنده بعدی.
+- این سند (`FRONTEND_HANDOFF.md`) به‌عنوان منبع حقیقت وضعیت.
+- `npm run build` موفق به‌عنوان اثبات صحت.
+
+کارهای باقی‌مانده پیشنهادی (خارج از scope فعلی):
+- اتصال Backend واقعی با بازنویسی `src/api/adapter.ts` (مرجع مسیرها در README و BACKEND_IMPLEMENTATION_SPEC).
+- اضافه‌کردن لوگوی واقعی زرین‌پال.
+- پاکسازی فایل‌های قدیمی starter و commit های تمیزتر (اختیاری).
 
 **Task 11: README و تحویل نهایی**
 - README فرانت‌اند: ساختار پروژه، مرز mock، نحوه اتصال Backend آینده، اجرای محلی.
