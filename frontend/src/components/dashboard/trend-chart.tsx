@@ -36,7 +36,7 @@ export function TrendChart({ data, stroke = "#f59e0b", ariaLabel, colorLabel }: 
         </span>
       </div>
       <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground" dir="rtl">
-        {data.map((d) => (
+        {data.slice().reverse().map((d) => (
           <span key={d.label} title={d.display}>
             {d.label}
           </span>

@@ -10,7 +10,7 @@ type MobileNavProps = {
 
 export function MobileNav({ currentPath, onNavigate }: MobileNavProps) {
   return (
-    <div className="flex h-14 items-center justify-between border-b border-border bg-card/60 px-4 backdrop-blur lg:hidden">
+    <div className="relative z-[100] flex h-14 items-center justify-between border-b border-border bg-card/60 px-4 backdrop-blur lg:hidden">
       <DetailsNav currentPath={currentPath} onNavigate={onNavigate} />
 
       <span className="text-sm font-medium text-muted-foreground">
@@ -37,19 +37,24 @@ function DetailsNav({ currentPath, onNavigate }: MobileNavProps) {
   };
 
   return (
-    <details id="mobile-nav-details" className="group relative">
+    <details
+      id="mobile-nav-details"
+      className="relative z-[110]"
+    >
       <summary
         aria-label="باز کردن منوی ناوبری"
         className="inline-flex size-11 cursor-pointer list-none items-center justify-center rounded-md border border-border bg-transparent text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
         <Menu aria-hidden="true" className="size-5" />
       </summary>
+
       <nav
         aria-label="ناوبری موبایل"
-        className="absolute right-0 top-14 z-50 hidden w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-popover p-3 shadow-lg group-open:block"
+        className="absolute right-0 top-[calc(100%+0.75rem)] z-[120] w-72 max-w-[calc(100vw-2rem)] rounded-lg border border-border bg-popover p-3 shadow-lg"
       >
         <div className="flex items-center justify-between border-b border-border px-1 pb-2">
           <span className="text-sm font-semibold">ناوبری</span>
+
           <button
             type="button"
             aria-label="بستن منوی ناوبری"
@@ -59,12 +64,17 @@ function DetailsNav({ currentPath, onNavigate }: MobileNavProps) {
             <X aria-hidden="true" className="size-4" />
           </button>
         </div>
+
         {navigationSections.map((section) => (
           <div key={section.title} className="flex flex-col gap-1">
-            <p className="px-2 pb-1 pt-3 text-xs font-medium text-muted-foreground">{section.title}</p>
+            <p className="px-2 pb-1 pt-3 text-xs font-medium text-muted-foreground">
+              {section.title}
+            </p>
+
             {section.items.map((item) => {
               const isActive = currentPath === item.path;
               const Icon = item.icon;
+
               return (
                 <a
                   key={item.key}
@@ -81,7 +91,13 @@ function DetailsNav({ currentPath, onNavigate }: MobileNavProps) {
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
                 >
-                  <Icon aria-hidden="true" className={cn("size-4.5 shrink-0", isActive && "text-primary")} />
+                  <Icon
+                    aria-hidden="true"
+                    className={cn(
+                      "size-4.5 shrink-0",
+                      isActive && "text-primary",
+                    )}
+                  />
                   {item.label}
                 </a>
               );

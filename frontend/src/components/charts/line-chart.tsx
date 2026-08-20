@@ -17,8 +17,8 @@ type LineChartProps = {
 
 /**
  * نمودار خطی سبک مبتنی بر SVG با کنترل کامل RTL.
- * نقاط ورودی {x, y} با مقیاس واقعی هستند و در اینجا به مختصات SVG نگاشت می‌شوند.
- * اگر `renderTooltip` داده شود، روی هر نقطه یک دکمه شفاف برای هاور/فوکوس قرار می‌گیرد.
+ * نقاط ورودی به ترتیب زمانی (قدیمی به جدید) داده می‌شوند و اینجا برای جهت
+ * RTL برعکس می‌شوند تا قدیمی‌ترین نقطه در راست و جدیدترین در چپ دیده شود.
  */
 export function LineChart({
   points,
@@ -28,7 +28,6 @@ export function LineChart({
   strokeWidth = 2,
   dotColor = "#ffffff",
   ariaLabel,
-  renderTooltip,
 }: LineChartProps) {
   const chartId = useId();
 
@@ -36,14 +35,16 @@ export function LineChart({
     return <ChartEmpty width={width} height={height} message="داده‌ای برای نمودار نیست" />;
   }
 
-  const { plotWidth, plotHeight } = computePlotSize(width, height);
-  const { xFn, yFn } = buildScales(points, plotWidth, plotHeight);
+  const reversedPoints = [...points].reverse();
 
-  const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"} ${xFn(p.x)} ${yFn(p.y)}`).join(" ");
-  const areaPath = `${pathD} L ${xFn(points[points.length - 1].x)} ${plotHeight} L ${xFn(points[0].x)} ${plotHeight} Z`;
+  const { plotWidth, plotHeight } = computePlotSize(width, height);
+  const { xFn, yFn } = buildScales(reversedPoints, plotWidth, plotHeight);
+
+  const pathD = reversedPoints.map((p, i) => `${i === 0 ? "M" : "L"} ${xFn(p.x)} ${yFn(p.y)}`).join(" ");
+  const areaPath = `${pathD} L ${xFn(reversedPoints[reversedPoints.length - 1].x)} ${plotHeight} L ${xFn(reversedPoints[0].x)} ${plotHeight} Z`;
 
   return (
-    <div className="w-full overflow-x-auto" dir="ltr">
+    <div className="w-full overflow-x-auto">
       <svg
         role="img"
         aria-label={ariaLabel}
@@ -72,14 +73,15 @@ export function LineChart({
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
           />
-          {points.map((p, i) => (
-            <circle key={i} cx={xFn(p.x)} cy={yFn(p.y)} r={3.5} fill={dotColor} stroke={stroke} strokeWidth={1.5} />
+          {reversedPoints.map((p, i) => (
+            <circle key={i} cx={xFn(p.x)} cy={yFn(p.y)} r={3.5} fill={dotColor} stroke={stroke} strokeWidth={1.5}>
+              <title>{`${i + 1}`}</title>
+            </circle>
           ))}
         </g>
 
-        {/* نقاط تعاملی شفاف برای tooltip (استفاده از <title> برای دسترسی‌پذیری) */}
         <g>
-          {points.map((p, i) => (
+          {reversedPoints.map((p, i) => (
             <circle
               key={`hit-${i}`}
               cx={xFn(p.x)}
@@ -88,7 +90,7 @@ export function LineChart({
               fill="transparent"
               className="cursor-pointer"
             >
-              <title>{`${points[i].y}`}</title>
+              <title>{`نقطه ${i + 1}`}</title>
             </circle>
           ))}
         </g>

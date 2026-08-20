@@ -173,16 +173,13 @@ export function InsightDetailPage() {
         <span className="text-muted-foreground">
           بازه: {formatDateRange(insight.period)}
         </span>
-        <a
-          href={getInsightTracePath(insight.id)}
-          onClick={(event) => {
-            event.preventDefault();
-            navigate(getInsightTracePath(insight.id));
-          }}
-          className="inline-flex min-h-9 items-center gap-1 rounded-md border border-border px-3 text-xs text-foreground transition-colors hover:bg-muted"
+        <Button
+          variant="outline"
+          className="gap-1 text-xs"
+          onClick={() => navigate(getInsightTracePath(insight.id))}
         >
           مشاهده ردیابی محاسبه (trace)
-        </a>
+        </Button>
       </section>
     </div>
   );

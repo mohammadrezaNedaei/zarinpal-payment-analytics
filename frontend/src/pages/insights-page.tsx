@@ -8,6 +8,7 @@ import { SEVERITY_FILTER_OPTIONS, SEVERITY_META, SEVERITY_ORDER } from "@/lib/se
 import { useGlobalFilters } from "@/lib/global-filters";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataState } from "@/components/ui/data-state";
 
@@ -82,7 +83,7 @@ export function InsightsPage() {
               aria-pressed={isActive}
               onClick={() => setSeverityFilter(option.value)}
               className={cn(
-                "inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                "inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                 isActive
                   ? "border-primary bg-primary/15 text-foreground"
                   : "border-border text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -126,7 +127,7 @@ function InsightListItem({ insight, onOpen }: { insight: Insight; onOpen: () => 
             <CardTitle className="text-base">{insight.title}</CardTitle>
             <Badge className={meta.className}>{meta.label}</Badge>
           </div>
-          <CardDescription>{insight.summary}</CardDescription>
+          <CardDescription className="line-clamp-2">{insight.summary}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
           <span className="inline-flex items-center gap-1.5 text-muted-foreground">
@@ -138,14 +139,10 @@ function InsightListItem({ insight, onOpen }: { insight: Insight; onOpen: () => 
             )}
           </span>
           <span className="text-muted-foreground">اطمینان: {formatPercent(insight.confidence)}</span>
-          <button
-            type="button"
-            onClick={onOpen}
-            className="inline-flex min-h-9 items-center gap-1.5 rounded-md border border-border px-3 text-sm text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-          >
+          <Button variant="outline" className="gap-1.5" onClick={onOpen}>
             جزئیات و اقدام‌ها
             <ArrowLeft aria-hidden="true" className="size-4" />
-          </button>
+          </Button>
         </CardContent>
       </Card>
     </li>
