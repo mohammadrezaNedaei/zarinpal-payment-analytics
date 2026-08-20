@@ -1,21 +1,12 @@
 /**
- * لایه آداپتر داده — نسخه واقعی (متصل به Backend Django).
+ * لایه آداپتر داده — نسخه واقعی (متصل به Backend Django با JWT).
  *
  * صفحات فقط از این فایل داده می‌گیرند؛ شکل خروجی (`api/types.ts`) برای صفحات
  * ثابت می‌ماند و این فایل پاسخ‌های Snake_case واقعی API را به آن شکل نگاشت
  * می‌کند. پارامترها مستقیم به query-string تبدیل می‌شوند.
  *
- * مسیرهای API (طبق BACKEND_IMPLEMENTATION_SPEC و README backend):
- *   GET /api/v1/merchants
- *   GET /api/v1/merchants/{merchant_key}/overview   ← شامل daily_trend و psp_breakdown
- *   GET /api/v1/merchants/{merchant_key}/funnel
- *   GET /api/v1/merchants/{merchant_key}/retry-analysis
- *   GET /api/v1/merchants/{merchant_key}/insights
- *   GET /api/v1/insights/{insight_id}
- *   GET /api/v1/insights/{insight_id}/trace
- *
- * احراز هویت: Django session (cookie). همه درخواست‌ها با credentials: "include"
- * ارسال می‌شوند و از proxy Vite استفاده می‌کنیم تا کوکی به درستی جابه‌جا شود.
+ * احراز هویت: JWT Bearer (از `auth.tsx` تنظیم می‌شود). همه درخواست‌ها با
+ * هدر Authorization ارسال می‌شوند و از proxy Vite استفاده می‌کنیم.
  */
 
 import type {
@@ -58,8 +49,52 @@ export type QueryParams = {
 
 const API_BASE = "/api/v1";
 
-async function requestJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, { credentials: "include" });
+// توکن‌های JWT (از auth.tsx تنظیم می‌شوند).
+let accessToken: string | null = null;
+let refreshToken: string | null = null;
+
+export function setAccessToken(token: string | null): void {
+  accessToken = token;
+}
+
+export function setRefreshToken(token: string | null): void {
+  refreshToken = token;
+}
+
+/** رفرش توکن access با استفاده از refresh_token؛ در صورت موفقیت توکن جدید تنظیم می‌شود. */
+async function refreshAccessToken(): Promise<boolean> {
+  if (!refreshToken) return false;
+  try {
+    const response = await fetch(`${API_BASE}/auth/refresh`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+      credentials: "include",
+    });
+    if (!response.ok) return false;
+    const body = (await response.json()) as { access_token?: string; refresh_token?: string };
+    if (body.access_token) setAccessToken(body.access_token);
+    if (body.refresh_token) setRefreshToken(body.refresh_token);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function requestJson<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const doFetch = (): Promise<Response> => {
+    const headers = new Headers(init.headers);
+    if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+    return fetch(`${API_BASE}${path}`, { ...init, headers, credentials: "include" });
+  };
+
+  let response = await doFetch();
+
+  // اگر توکن access منقضی شده بود، یک‌بار رفرش و درخواست را تکرار کن.
+  if (response.status === 401 && (await refreshAccessToken())) {
+    response = await doFetch();
+  }
+
   if (!response.ok) {
     let message = `خطای سرویس (${response.status})`;
     try {
@@ -217,6 +252,22 @@ export async function getOverview(params: QueryParams = {}): Promise<Overview> {
 // Payment Health و Funnel
 // ---------------------------------------------------------------------------
 
+type RawFunnel = {
+  created_sessions: number;
+  attempted_sessions: number;
+  bank_entry_sessions: number;
+  successful_sessions: number;
+};
+
+function toFunnelStages(data: RawFunnel): FunnelStage[] {
+  return [
+    { stageKey: "created", label: "شروع پرداخت", count: data.created_sessions, amount: 0, currency: "IRR" },
+    { stageKey: "attempted", label: "تلاش واقعی", count: data.attempted_sessions, amount: 0, currency: "IRR" },
+    { stageKey: "bank_entry", label: "انتقال به بانک", count: data.bank_entry_sessions, amount: 0, currency: "IRR" },
+    { stageKey: "successful", label: "تأیید شده", count: data.successful_sessions, amount: 0, currency: "IRR" },
+  ];
+}
+
 export async function getPaymentHealth(params: QueryParams = {}): Promise<PaymentHealth> {
   const query = buildMetricQuery(params);
   const merchantKey = params.merchantKey ?? "M250";
@@ -238,29 +289,18 @@ export async function getPaymentHealth(params: QueryParams = {}): Promise<Paymen
       pspTitle: psp.psp_code,
       sessionCount: psp.session_count,
       successRate: psp.success_rate ?? 0,
-      status: psp.success_rate === null || psp.success_rate >= 0.7 ? "ok" : psp.success_rate >= 0.5 ? "attention" : "critical",
+      status:
+        psp.success_rate === null || psp.success_rate >= 0.7
+          ? "ok"
+          : psp.success_rate >= 0.5
+            ? "attention"
+            : "critical",
       atRiskAmount: psp.potential_lost_amount,
     })),
     funnel: toFunnelStages(funnelData),
     atRiskAmount: overviewData.potential_lost_amount,
     currency: toCurrency(overviewData.currency),
   };
-}
-
-type RawFunnel = {
-  created_sessions: number;
-  attempted_sessions: number;
-  bank_entry_sessions: number;
-  successful_sessions: number;
-};
-
-function toFunnelStages(data: RawFunnel): FunnelStage[] {
-  return [
-    { stageKey: "created", label: "شروع پرداخت", count: data.created_sessions, amount: 0, currency: "IRR" },
-    { stageKey: "attempted", label: "تلاش واقعی", count: data.attempted_sessions, amount: 0, currency: "IRR" },
-    { stageKey: "bank_entry", label: "انتقال به بانک", count: data.bank_entry_sessions, amount: 0, currency: "IRR" },
-    { stageKey: "successful", label: "تأیید شده", count: data.successful_sessions, amount: 0, currency: "IRR" },
-  ];
 }
 
 export async function getFunnel(params: QueryParams = {}): Promise<PaymentHealth["funnel"]> {
@@ -306,7 +346,7 @@ export async function getRetryAnalysis(params: QueryParams = {}): Promise<RetryA
     recoveryRate: kpiPercent("retry_recovery_rate", data.retry_recovery_rate, data.metric_version),
     recoveredAmount: data.recovered_amount,
     currency: toCurrency(data.currency),
-    atRiskAmount: 0, // از overview می‌آید؛ در صورت نیاز getPaymentHealth را صدا بزنید.
+    atRiskAmount: 0,
     breakdown: data.breakdown.map((row) => ({
       pspKey: row.psp_code,
       pspTitle: row.psp_code,

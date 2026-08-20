@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { setAccessToken, setRefreshToken } from "@/api/adapter";
 
 type AuthState =
   | { status: "checking" }
@@ -24,14 +25,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const login = async () => {
       try {
-        const response = await fetch("/api/v1/auth/demo-session", {
-          method: "POST",
-          credentials: "include",
-        });
+        const response = await fetch("/api/v1/auth/demo-session", { method: "POST", credentials: "include" });
         if (!response.ok) {
           throw new Error(`خطای لاگین (${response.status})`);
         }
-        const body = (await response.json()) as { username?: string };
+        const body = (await response.json()) as {
+          access_token?: string;
+          refresh_token?: string;
+          username?: string;
+        };
+        if (body.access_token) setAccessToken(body.access_token);
+        if (body.refresh_token) setRefreshToken(body.refresh_token);
         setAuthState({ status: "ready", username: body.username ?? "demo" });
       } catch (error) {
         setAuthState({
