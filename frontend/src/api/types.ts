@@ -195,6 +195,7 @@ export type PaymentHealth = {
     sessionCount: number;
     successRate: number;
     status: "ok" | "attention" | "critical";
+    atRiskAmount: number; // مبلغ در معرض ازدست‌رفتن این PSP (بالقوه)
   }>;
   funnel: FunnelStage[];
   atRiskAmount: number;

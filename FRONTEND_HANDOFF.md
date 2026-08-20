@@ -62,6 +62,14 @@ npm run build
 - **PagePlaceholder:** کامپوننت «در حال ساخت» با ماژول‌های برنامه‌ریزی‌شده هر صفحه + نشان فیلترهای فعلی — تضمین می‌کند هیچ صفحه‌ای به‌عنوان کامل تحویل داده نشود.
 - **پنج صفحه placeholder:** overview، payment-health، retry-analysis، insights و trace — هر کدام با شرح ماژول‌های برنامه‌ریزی‌شده (Task 5 تا 9).
 
+### Task 6 — Payment Health و Funnel (کامل)
+
+- **PspComparison:** مقایسه PSPها با میله‌های افقی RTL (سهم سشن‌ها + نرخ موفقیت + وضعیت پایدار/توجه/بحرانی) و «مبلغ در معرض ازدست‌رفتن» هر PSP.
+- **FunnelChart:** قیف پرداخت ۵ مرحله‌ای (شروع → انتقال به بانک → تلاش واقعی → تأیید → تسویه) با افت درصدی بین مراحل.
+- **صفحه PaymentHealth:** ۳ کارت (نرخ موفقیت کل، مبلغ در معرض ازدست‌رفتن با هشدار «زیان قطعی نیست»، سشن‌های معتبر) + مقایسه PSP + قیف؛ خواندن از `getPaymentHealth`؛ حالت‌های loading و error.
+- **قرارداد:** فیلد `atRiskAmount` به `pspBreakdown` در types.ts و mocks اضافه شد.
+- مقادیر «در معرض ازدست‌رفتن» در همه قسمت‌ها به‌صورت صریح از زیان قطعی تفکیک شده‌اند (طبق سند Backend).
+
 ### Task 5 — Overview Dashboard (کامل)
 
 - **KpiCard:** ۴ کارت (فروش موفق، نرخ موفقیت، نرخ تلاش مجدد، مبلغ در معرض ازدست‌رفتن) با نمایش تغییر نسبت به دوره قبل (فلش سبز/قرمز/خنثی) و اعداد فارسی.
@@ -111,7 +119,9 @@ frontend/
     │   │   ├── kpi-card.tsx            # کارت KPI + Skeleton
     │   │   ├── trend-chart.tsx         # نمودار روند (پوسته LineChart)
     │   │   ├── health-summary.tsx      # خلاصه سلامت پرداخت
-    │   │   └── recent-insights.tsx     # لیست بینش‌های اخیر
+    │   │   ├── recent-insights.tsx     # لیست بینش‌های اخیر
+    │   │   ├── psp-comparison.tsx      # مقایسه PSP (میله‌ای RTL)
+    │   │   └── funnel-chart.tsx        # قیف پرداخت
     │   ├── layout/
     │   │   ├── app-shell.tsx       # چیدمان کلی: Sidebar + MobileNav + TopBar + PageHeader
     │   │   ├── sidebar.tsx         # سایدبار دسکتاپ
@@ -149,11 +159,10 @@ frontend/
 
 ## 7. گام پیشنهادی بعدی
 
-**Task 6: Payment Health و Funnel**
-- نرخ موفقیت، مقایسه PSP (میله‌ای SVG) و قیف پرداخت (FunnelChart).
-- تفکیک صریح «مبلغ در معرض ازدست‌رفتن» از زیان قطعی (طبق سند Backend).
+**Task 7: Retry Analysis**
+- کارت‌های بازیابی (نرخ تلاش مجدد، نرخ بازیابی، مبلغ بازیابی‌شده، مبلغ در معرض ازدست‌رفتن)، جدول تفکیکی و حالت‌های توضیحی — خواندن از `getRetryAnalysis` و `getPaymentHealth`.
 
-سپس به ترتیب Task 7 (Retry Analysis)، Task 8 (Insights)، Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
+سپس Task 8 (Insights)، Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
 
 ## 8. مستندات مرجع
 

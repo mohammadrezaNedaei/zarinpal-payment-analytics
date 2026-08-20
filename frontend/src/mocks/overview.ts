@@ -76,10 +76,10 @@ export const mockPaymentHealth: PaymentHealth = {
     unit: "percent",
   },
   pspBreakdown: [
-    { pspKey: "psp-01", pspTitle: "PSP یک", sessionCount: 221_000, successRate: 0.74, status: "ok" },
-    { pspKey: "psp-02", pspTitle: "PSP دو", sessionCount: 84_000, successRate: 0.51, status: "critical" },
-    { pspKey: "psp-07", pspTitle: "PSP هفت", sessionCount: 45_000, successRate: 0.62, status: "attention" },
-    { pspKey: "psp-03", pspTitle: "PSP سه", sessionCount: 40_000, successRate: 0.7, status: "ok" },
+    { pspKey: "psp-01", pspTitle: "PSP یک", sessionCount: 221_000, successRate: 0.74, status: "ok", atRiskAmount: 120_000_000 },
+    { pspKey: "psp-02", pspTitle: "PSP دو", sessionCount: 84_000, successRate: 0.51, status: "critical", atRiskAmount: 148_000_000 },
+    { pspKey: "psp-07", pspTitle: "PSP هفت", sessionCount: 45_000, successRate: 0.62, status: "attention", atRiskAmount: 32_000_000 },
+    { pspKey: "psp-03", pspTitle: "PSP سه", sessionCount: 40_000, successRate: 0.7, status: "ok", atRiskAmount: 10_000_000 },
   ],
   funnel: [
     { stageKey: "initiated", label: "شروع پرداخت", count: 412_000, amount: 5_100_000_000, currency: "IRR" },
