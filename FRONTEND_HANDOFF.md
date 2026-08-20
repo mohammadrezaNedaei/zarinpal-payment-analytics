@@ -62,6 +62,15 @@ npm run build
 - **PagePlaceholder:** کامپوننت «در حال ساخت» با ماژول‌های برنامه‌ریزی‌شده هر صفحه + نشان فیلترهای فعلی — تضمین می‌کند هیچ صفحه‌ای به‌عنوان کامل تحویل داده نشود.
 - **پنج صفحه placeholder:** overview، payment-health، retry-analysis، insights و trace — هر کدام با شرح ماژول‌های برنامه‌ریزی‌شده (Task 5 تا 9).
 
+### Task 8 — Insights Experience (کامل)
+
+- **ماژول `lib/severity.ts`:** متادیتای مشترک severity (برچسب فارسی + کلاس‌های رنگی)، ترتیب اولویت و گزینه‌های فیلتر — تکرار در recent-insights حذف شد و به آن وصل شد.
+- **صفحه Insights (لیست):** فیلتر چیپ‌های severity با `aria-pressed` و شمارنده هر severity؛ مرتب‌سازی پیش‌فرض بر اساس شدت سپس اثر مالی؛ کارت هر بینش (severity badge، خلاصه، اثر مالی تقریبی، اطمینان) با دکمه «جزئیات و اقدام‌ها»؛ حالت empty با DataState.
+- **صفحه Insight Detail (`/insights/:id`):** از `getInsightDetail`؛ ۴ کارت معیار (فعلی/پایه/تغییر مطلق/تغییر نسبی با رنگ مثبت-منفی)، اثر مالی با روش تخمین، عوامل مرتبط با نوار سهم، اقدام‌های پیشنهادی شماره‌دار، و ناحیه اعتبار (اطمینان، پوشش، بازه) + لینک trace.
+- **روتینگ:** مسیر فرزند `/insights/:insightId` در app.tsx؛ `findNavigationItem` مسیرهای فرزند را به والد نگاشت می‌کند؛ `getInsightPath` در lib/navigation.
+- **Overview** به جزئیات بینش متصل شد (`navigate(getInsightPath(id))`).
+- فایل‌های جدید: `lib/severity.ts`، `pages/insight-detail-page.tsx`؛ بازنویسی: `pages/insights-page.tsx`، `pages/overview-page.tsx` (اتصال)، `app.tsx` (روت).
+
 ### Task 7 — Retry Analysis (کامل)
 
 - **قرارداد:** `RetryBreakdownRow` به types.ts اضافه شد (PSP، بانک صادرکننده، کد پاسخ سوئیچ، تعداد سشن/تلاش مجدد/بازیابی‌شده، مبلغ بازیابی، نرخ بازیابی)؛ `breakdown: RetryBreakdownRow[]` به `RetryAnalysis` اضافه شد و mock تکمیل شد.
@@ -109,7 +118,8 @@ frontend/
     ├── lib/
     │   ├── utils.ts                # تابع cn
     │   ├── navigation.ts           # منبع حقیقت مسیرها و آیتم‌های ناوبری
-    │   └── global-filters.tsx      # Context فیلترهای سراسری + کنترل‌های Select
+    │   ├── global-filters.tsx      # Context فیلترهای سراسری + کنترل‌های Select
+    │   └── severity.ts             # متادیتای مشترک severity (برچسب، رنگ، ترتیب)
     ├── api/
     │   ├── types.ts                # قراردادهای TypeScript (مرز داده، هماهنگ با Backend)
     │   └── adapter.ts              # لایه data access (mock امروز، fetch به Django در آینده)
@@ -169,10 +179,10 @@ frontend/
 
 ## 7. گام پیشنهادی بعدی
 
-**Task 8: Insights Experience**
-- لیست بینش‌ها با فیلتر بر اساس severity و نوع + صفحه/نمای جزئیات (خلاصه، اثر مالی، عوامل مرتبط، اقدام پیشنهادی، دسترسی به trace) — خواندن از `getInsights`، `getInsightDetail` و `getInsightTrace`.
+**Task 9: Trace و Evidence**
+- صفحه/کشوی trace با تعریف معیار (نسخه، سطح محاسبه، فرمول)، فیلترها، پوشش داده، جدول شواهد با pagination — خواندن از `getTrace`/`getInsightTrace`؛ صفحه جزئیات بینش به trace متصل می‌شود.
 
-سپس Task 9 (Trace)، Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
+سپس Task 10 (کیفیت و ریسپانسیو) و Task 11 (README و تحویل).
 
 ## 8. مستندات مرجع
 

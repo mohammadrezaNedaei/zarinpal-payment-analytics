@@ -1,18 +1,12 @@
 import { Lightbulb } from "lucide-react";
 import type { Insight } from "@/api/types";
+import { SEVERITY_META } from "@/lib/severity";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
 type RecentInsightsProps = {
   insights: Insight[];
   onOpenInsight: (insightId: string) => void;
-};
-
-const SEVERITY_COLORS: Record<Insight["severity"], string> = {
-  low: "bg-slate-500/20 text-slate-300 border-slate-500/40",
-  medium: "bg-amber-500/15 text-amber-300 border-amber-500/40",
-  high: "bg-orange-500/15 text-orange-300 border-orange-500/40",
-  critical: "bg-red-500/15 text-red-300 border-red-500/40",
 };
 
 export function RecentInsights({ insights, onOpenInsight }: RecentInsightsProps) {
@@ -44,7 +38,7 @@ export function RecentInsights({ insights, onOpenInsight }: RecentInsightsProps)
             className="flex flex-col gap-2 py-3 text-right transition-colors hover:bg-muted/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-card"
           >
             <span className="flex flex-wrap items-center gap-2">
-              <Badge className={SEVERITY_COLORS[insight.severity]}>{SEVERITY_LABELS[insight.severity]}</Badge>
+              <Badge className={SEVERITY_META[insight.severity].className}>{SEVERITY_META[insight.severity].label}</Badge>
               {insight.financialImpact !== undefined && (
                 <span className="text-xs text-muted-foreground">
                   اثر مالی: {formatAmount(insight.financialImpact.amount)}
@@ -59,13 +53,6 @@ export function RecentInsights({ insights, onOpenInsight }: RecentInsightsProps)
     </Card>
   );
 }
-
-const SEVERITY_LABELS: Record<Insight["severity"], string> = {
-  low: "کم",
-  medium: "متوسط",
-  high: "زیاد",
-  critical: "بحرانی",
-};
 
 function formatAmount(amount: number): string {
   return amount.toLocaleString("fa-IR");

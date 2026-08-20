@@ -6,6 +6,7 @@ import { OverviewPage } from "@/pages/overview-page";
 import { PaymentHealthPage } from "@/pages/payment-health-page";
 import { RetryAnalysisPage } from "@/pages/retry-analysis-page";
 import { InsightsPage } from "@/pages/insights-page";
+import { InsightDetailPage } from "@/pages/insight-detail-page";
 import { TracePage } from "@/pages/trace-page";
 import { DesignPage } from "@/pages/design-page";
 
@@ -26,6 +27,7 @@ export function App() {
     { path: appRoutes.paymentHealth, element: <PaymentHealthPage /> },
     { path: appRoutes.retryAnalysis, element: <RetryAnalysisPage /> },
     { path: appRoutes.insights, element: <InsightsPage /> },
+    { path: "/insights/:insightId", element: <InsightDetailPage /> },
     { path: appRoutes.trace, element: <TracePage /> },
     { path: appRoutes.design, element: <DesignPage /> },
     { path: "*", element: <OverviewPage /> },

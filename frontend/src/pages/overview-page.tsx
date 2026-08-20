@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { Insight, Overview, PaymentHealth } from "@/api/types";
 import { getOverview, getPaymentHealth, getInsights } from "@/api/adapter";
+import { getInsightPath } from "@/lib/navigation";
 import { useGlobalFilters } from "@/lib/global-filters";
 import { KpiCard, KpiCardSkeleton } from "@/components/dashboard/kpi-card";
 import { TrendChart } from "@/components/dashboard/trend-chart";
@@ -37,10 +39,13 @@ export function OverviewPage() {
     void loadOverview();
   }, [loadOverview]);
 
-  const handleOpenInsight = useCallback((insightId: string) => {
-    // TODO (Task 8): پرش به صفحه جزئیات بینش.
-    console.info("باز کردن بینش در Task 8 پیاده‌سازی می‌شود:", insightId);
-  }, []);
+  const navigate = useNavigate();
+  const handleOpenInsight = useCallback(
+    (insightId: string) => {
+      navigate(getInsightPath(insightId));
+    },
+    [navigate],
+  );
 
   if (loadState.status === "loading") {
     return <OverviewLoading />;

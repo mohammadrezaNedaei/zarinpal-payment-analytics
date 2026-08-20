@@ -10,6 +10,11 @@ export const appRoutes = {
   design: "/design",
 } as const;
 
+/** مسیر جزئیات یک بینش؛ `insightId` را با encodeURIComponent مقداردهی کنید. */
+export function getInsightPath(insightId: string): string {
+  return `/insights/${encodeURIComponent(insightId)}`;
+}
+
 export type AppRouteKey = keyof typeof appRoutes;
 
 type NavigationItem = {
@@ -74,5 +79,9 @@ export const navigationSections: NavigationSection[] = [
 ];
 
 export function findNavigationItem(pathname: string): NavigationItem | undefined {
+  // مسیرهای فرزند (مثل جزئیات بینش) به آیتم والد نگاشت می‌شوند.
+  if (pathname.startsWith("/insights/")) {
+    return navigationSections.flatMap((section) => section.items).find((item) => item.key === "insights");
+  }
   return navigationSections.flatMap((section) => section.items).find((item) => item.path === pathname);
 }
