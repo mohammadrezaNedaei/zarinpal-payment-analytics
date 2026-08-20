@@ -7,6 +7,7 @@ import { PaymentHealthPage } from "@/pages/payment-health-page";
 import { RetryAnalysisPage } from "@/pages/retry-analysis-page";
 import { InsightsPage } from "@/pages/insights-page";
 import { InsightDetailPage } from "@/pages/insight-detail-page";
+import { AdvisorPage } from "@/pages/advisor-page";
 import { TracePage } from "@/pages/trace-page";
 import { DesignPage } from "@/pages/design-page";
 
@@ -30,6 +31,7 @@ export function App() {
     { path: "/insights/:insightId", element: <InsightDetailPage /> },
     { path: appRoutes.trace, element: <TracePage /> },
     { path: "/insights/:insightId/trace", element: <TracePage /> },
+    { path: appRoutes.advisor, element: <AdvisorPage /> },
     { path: appRoutes.design, element: <DesignPage /> },
     { path: "*", element: <OverviewPage /> },
   ]);

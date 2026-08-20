@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { ArrowLeftRight, LayoutDashboard, Lightbulb, ListTree, SearchCheck } from "lucide-react";
+import { ArrowLeftRight, Bot, LayoutDashboard, Lightbulb, ListTree, SearchCheck } from "lucide-react";
 
 export const appRoutes = {
   overview: "/",
@@ -7,6 +7,7 @@ export const appRoutes = {
   retryAnalysis: "/retry-analysis",
   insights: "/insights",
   trace: "/trace",
+  advisor: "/advisor",
   design: "/design",
 } as const;
 
@@ -66,6 +67,13 @@ export const navigationSections: NavigationSection[] = [
         path: appRoutes.insights,
         icon: Lightbulb,
         description: "تغییرها، اثر مالی و اقدام‌های پیشنهادی",
+      },
+      {
+        key: "advisor",
+        label: "مشاور پرداخت",
+        path: appRoutes.advisor,
+        icon: Bot,
+        description: "تحلیل چندبعدی و روایت LLM",
       },
     ],
   },

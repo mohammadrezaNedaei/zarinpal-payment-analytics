@@ -10,6 +10,7 @@
  */
 
 import type {
+  AdvisorResponse,
   Currency,
   FunnelStage,
   Insight,
@@ -456,6 +457,29 @@ export async function getInsights(params: QueryParams = {}): Promise<Insight[]> 
 export async function getInsightDetail(insightId: string): Promise<Insight> {
   const data = await requestJson<RawInsight>(`/insights/${insightId}`);
   return mapInsight(data);
+}
+
+// ---------------------------------------------------------------------------
+// Advisor (تحلیل چندبعدی + روایت LLM)
+// ---------------------------------------------------------------------------
+
+export async function getAdvisor(
+  merchantKey: string,
+  dateFrom: string,
+  dateTo: string,
+  question: string,
+): Promise<AdvisorResponse> {
+  const body = JSON.stringify({
+    date_from: dateFrom,
+    date_to: dateTo,
+    timezone: "Asia/Tehran",
+    question,
+  });
+  return requestJson<AdvisorResponse>(`/merchants/${merchantKey}/advisor`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body,
+  });
 }
 
 // ---------------------------------------------------------------------------

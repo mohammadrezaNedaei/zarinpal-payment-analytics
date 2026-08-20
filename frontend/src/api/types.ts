@@ -199,6 +199,56 @@ export type Overview = {
   }>;
 };
 
+/** پاسخ Advisor (LLM + تحلیل چندبعدی). */
+export type AdvisorDimensionRow = {
+  value: string;
+  valid_sessions: number;
+  successful_sessions: number;
+  successful_amount: number;
+  potential_lost_amount: number;
+  success_rate: number;
+};
+
+export type AdvisorDimensions = {
+  amount_buckets: AdvisorDimensionRow[];
+  hours: AdvisorDimensionRow[];
+  weekdays: AdvisorDimensionRow[];
+  psps: AdvisorDimensionRow[];
+  issuer_banks: AdvisorDimensionRow[];
+  terminals: AdvisorDimensionRow[];
+  switch_responses: AdvisorDimensionRow[];
+  verify_types: AdvisorDimensionRow[];
+};
+
+export type AdvisorRecommendation = {
+  code: string;
+  priority: "high" | "medium" | "low";
+  title: string;
+  rationale: string;
+  expected_signal: string;
+  guardrail: string;
+};
+
+export type AdvisorNarrative = {
+  answer?: string;
+  key_findings?: unknown[];
+  next_actions?: unknown[];
+  caveats?: unknown[];
+};
+
+export type AdvisorResponse = {
+  merchant_key: string;
+  period: { date_from: string; date_to: string };
+  executive_summary: string[];
+  overview: Record<string, unknown>;
+  dimensions: AdvisorDimensions;
+  retry: Record<string, unknown>;
+  recommendations: AdvisorRecommendation[];
+  advisor_narrative: AdvisorNarrative | null;
+  narrative_source: "llm" | "deterministic_engine" | "deterministic_engine_fallback";
+  methodology: Record<string, string>;
+};
+
 /** پاسخ payment-health (Task 6). */
 export type PaymentHealth = {
   merchantKey: string;

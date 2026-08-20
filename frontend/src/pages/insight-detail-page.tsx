@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataState } from "@/components/ui/data-state";
+import { InsightLlmAdvice } from "@/components/dashboard/insight-llm-advice";
 
 type LoadState =
   | { status: "loading" }
@@ -170,6 +171,7 @@ export function InsightDetailPage() {
               ))}
             </ul>
           )}
+          <InsightLlmAdvice insight={insight} />
         </CardContent>
       </Card>
 
