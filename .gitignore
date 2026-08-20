@@ -1,0 +1,43 @@
+# --- Dependencies ---
+node_modules/
+frontend/node_modules/
+
+# --- Build output ---
+dist/
+frontend/dist/
+build/
+
+# --- Environment & secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Raw data (2.2M rows; must never enter the repo) ---
+data/
+*.csv
+*.csv.gz
+*.parquet
+*.duckdb
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Logs ---
+logs/
+*.log
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# --- Python (future backend) ---
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/

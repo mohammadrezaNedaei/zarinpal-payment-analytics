@@ -1,0 +1,27 @@
+# نرمال‌سازی پایان خط: همه فایل‌های متنی در مخزن با LF ذخیره می‌شوند.
+# Git هنگام checkout در ویندوز، CRLF را اعمال می‌کند اما محتوای مخزن LF می‌ماند.
+
+* text=auto
+
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.js    text eol=lf
+*.jsx   text eol=lf
+*.css   text eol=lf
+*.html  text eol=lf
+*.json  text eol=lf
+*.md    text eol=lf
+*.yml   text eol=lf
+*.yaml  text eol=lf
+*.py    text eol=lf
+*.sh    text eol=lf
+
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.svg   text eol=lf
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
