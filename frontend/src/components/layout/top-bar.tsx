@@ -1,5 +1,5 @@
-import { CalendarDays, Gauge, ShieldAlert, Store } from "lucide-react";
-import { dateRangeOptions, type DateRangePreset } from "@/lib/global-filters";
+import { CalendarDays, Gauge, ShieldAlert } from "lucide-react";
+import { dateRangeOptions, useGlobalFilters, type DateRangePreset } from "@/lib/global-filters";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -15,7 +15,7 @@ export function TopBar({ dateRangePreset, onDateRangeChange, merchantKey, onMerc
     <header className="sticky top-0 z-30 flex items-center justify-between gap-4 border-b border-border bg-background/80 px-4 py-3 backdrop-blur md:px-6">
       <div className="flex items-center gap-2 text-muted-foreground" aria-hidden="true">
         <ShieldAlert className="size-4 text-primary" />
-        <span className="text-xs">داده نمایشی</span>
+        <span className="text-xs">داده واقعی (Docker Backend)</span>
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -50,17 +50,24 @@ function DateRangeSelect({ value, onChange }: { value: DateRangePreset; onChange
 }
 
 function MerchantSelect({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const { merchants, merchantsLoading } = useGlobalFilters();
   return (
     <label className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-      <Store aria-hidden="true" className="size-4 shrink-0" />
       <Select value={value} onValueChange={onChange}>
         <SelectTrigger className="min-w-36" aria-label="انتخاب پذیرنده">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="demo-merchant">فروشگاه آنلاین نمونه</SelectItem>
-          <SelectItem value="paydel">صندوق پی‌دل (نمایشی)</SelectItem>
-          <SelectItem value="digikala-like">سوپرمارکت آنلاین (نمایشی)</SelectItem>
+          {merchantsLoading && (
+            <SelectItem value={value} disabled>
+              در حال بارگذاری...
+            </SelectItem>
+          )}
+          {merchants.map((merchant) => (
+            <SelectItem key={merchant.merchantKey} value={merchant.merchantKey}>
+              {merchant.title}
+            </SelectItem>
+          ))}
         </SelectContent>
       </Select>
     </label>

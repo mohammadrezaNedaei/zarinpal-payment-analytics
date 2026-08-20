@@ -2,6 +2,7 @@ import type { ChartPoint } from "@/components/charts/line-chart";
 import { LineChart } from "@/components/charts/line-chart";
 
 type TrendDatum = {
+  key: string;
   label: string;
   value: number;
   display: string;
@@ -37,7 +38,7 @@ export function TrendChart({ data, stroke = "#f59e0b", ariaLabel, colorLabel }: 
       </div>
       <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground" dir="rtl">
         {data.slice().reverse().map((d) => (
-          <span key={d.label} title={d.display}>
+          <span key={d.key} title={d.display}>
             {d.label}
           </span>
         ))}

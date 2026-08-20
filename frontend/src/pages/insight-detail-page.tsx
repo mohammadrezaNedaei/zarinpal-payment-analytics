@@ -97,12 +97,14 @@ export function InsightDetailPage() {
             <CardDescription>{insight.financialImpact?.method}</CardDescription>
           </CardHeader>
           <CardContent>
-            {insight.financialImpact !== undefined ? (
+            {insight.financialImpact !== undefined && insight.financialImpact.amount > 0 ? (
               <p className="text-2xl font-semibold tabular-nums">
                 {formatAmount(insight.financialImpact.amount)} <span className="text-sm font-normal text-muted-foreground">ریال</span>
               </p>
             ) : (
-              <p className="text-sm text-muted-foreground">اثر مالی برآورد نشده است.</p>
+              <p className="text-sm text-muted-foreground">
+                {insight.type.includes("improvement") ? "بدون اثر مالی (بهبود شناسایی شده)" : "اثر مالی برآورد نشده است."}
+              </p>
             )}
           </CardContent>
         </Card>
@@ -119,17 +121,25 @@ export function InsightDetailPage() {
             {insight.drivers.length === 0 ? (
               <p className="text-sm text-muted-foreground">عامل مرتبطی ثبت نشده است.</p>
             ) : (
-              insight.drivers.map((driver) => (
+              insight.drivers.map((driver, _, all) => {
+              const maxChange = Math.max(...all.map((d) => Math.abs(d.contribution)), 0.0001);
+              return (
                 <div key={`${driver.factor}-${driver.value}`} className="flex flex-col gap-1">
                   <div className="flex items-center justify-between text-sm">
                     <span className="font-medium">{DRIVER_LABELS[driver.factor] ?? driver.factor}: {driver.value}</span>
-                    <span className="tabular-nums text-muted-foreground">{formatPercent(driver.contribution)}</span>
+                    <span className="tabular-nums text-muted-foreground">
+                      {driver.contribution > 0 ? "+" : ""}{formatPercent(driver.contribution)} تغییر نرخ
+                    </span>
                   </div>
                   <div dir="ltr" className="h-1.5 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full rounded-full bg-primary/70" style={{ width: `${driver.contribution * 100}%` }} />
+                    <div
+                      className="h-full rounded-full bg-primary/70"
+                      style={{ width: `${(Math.abs(driver.contribution) / maxChange) * 100}%` }}
+                    />
                   </div>
                 </div>
-              ))
+              );
+            })
             )}
           </CardContent>
         </Card>

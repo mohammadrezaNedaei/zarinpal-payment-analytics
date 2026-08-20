@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { Insight, Overview, PaymentHealth } from "@/api/types";
 import { getOverview, getPaymentHealth, getInsights } from "@/api/adapter";
 import { getInsightPath } from "@/lib/navigation";
-import { useGlobalFilters } from "@/lib/global-filters";
+import { resolveDateRange, useGlobalFilters } from "@/lib/global-filters";
 import { KpiCard, KpiCardSkeleton } from "@/components/dashboard/kpi-card";
 import { TrendChart } from "@/components/dashboard/trend-chart";
 import { HealthSummary } from "@/components/dashboard/health-summary";
@@ -23,7 +23,8 @@ export function OverviewPage() {
   const loadOverview = useCallback(async () => {
     setLoadState({ status: "loading" });
     try {
-      const params = { merchantKey };
+      const dateRange = resolveDateRange(dateRangePreset);
+      const params = { merchantKey, ...dateRange };
       const [overview, health, insights] = await Promise.all([
         getOverview(params),
         getPaymentHealth(params),
@@ -82,6 +83,7 @@ export function OverviewPage() {
           <CardContent>
             <TrendChart
               data={overview.trend.map((t) => ({
+                key: t.date,
                 label: formatDayLabel(t.date),
                 value: t.successRate,
                 display: `نرخ موفقیت: ${formatPercent(t.successRate)}`,

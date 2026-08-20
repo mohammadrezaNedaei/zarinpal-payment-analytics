@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Info } from "lucide-react";
 import type { RetryAnalysis } from "@/api/types";
 import { getRetryAnalysis } from "@/api/adapter";
-import { useGlobalFilters } from "@/lib/global-filters";
+import { resolveDateRange, useGlobalFilters } from "@/lib/global-filters";
 import { RetryCards } from "@/components/dashboard/retry-cards";
 import { RetryBreakdownTable } from "@/components/dashboard/retry-breakdown-table";
 import { DataState } from "@/components/ui/data-state";
@@ -19,7 +19,8 @@ export function RetryAnalysisPage() {
   const loadAnalysis = useCallback(async () => {
     setLoadState({ status: "loading" });
     try {
-      const analysis = await getRetryAnalysis({ merchantKey });
+      const dateRange = resolveDateRange(dateRangePreset);
+      const analysis = await getRetryAnalysis({ merchantKey, ...dateRange });
       setLoadState({ status: "ready", analysis });
     } catch (error) {
       setLoadState({ status: "error", message: error instanceof Error ? error.message : "خطای ناشناخته" });

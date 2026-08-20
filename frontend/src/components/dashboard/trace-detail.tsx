@@ -21,12 +21,12 @@ export function TraceDetail({ trace, formatPercent, formatCount }: TraceDetailPr
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 text-sm">
-          <InfoRow label="نام معیار" value={trace.metricName} dir="ltr" />
+          <InfoRow label="نام معیار" value={METRIC_NAMES[trace.metricName] ?? trace.metricName} />
           <InfoRow label="نسخه تعریف" value={trace.definitionVersion} dir="ltr" />
           <InfoRow label="سطح محاسبه" value={trace.calculationLevel === "session" ? "سشن" : "تلاش"} />
           <InfoRow label="نسخه دیتاست" value={trace.datasetVersion} dir="ltr" />
-          <InfoRow label="شناسه ingestion" value={trace.ingestionRunId} dir="ltr" />
-          <InfoRow label="قالب پرس‌وجو" value={trace.queryTemplateId} dir="ltr" />
+          <InfoRow label="شناسه ورود داده" value={trace.ingestionRunId} dir="ltr" />
+          <InfoRow label="شناسه محاسبه" value={trace.queryTemplateId} dir="ltr" />
         </CardContent>
       </Card>
 
@@ -78,8 +78,8 @@ export function TraceDetail({ trace, formatPercent, formatCount }: TraceDetailPr
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 text-sm">
-          <InfoRow label="پوشش داده (coverage)" value={formatPercent(trace.dataCoverage)} />
-          <InfoRow label="تعریف baseline" value={trace.baselineDefinition} />
+          <InfoRow label="پوشش داده" value={formatPercent(trace.dataCoverage)} />
+          <InfoRow label="تعریف دوره پایه" value={translateBaseline(trace.baselineDefinition)} />
           <div className="grid grid-cols-3 gap-3">
             <CountBox label="رکورد ورودی" value={formatCount(trace.inputRecordCount)} />
             <CountBox label="رکورد خروجی" value={formatCount(trace.outputRecordCount)} />
@@ -119,4 +119,18 @@ function CountBox({ label, value, tone }: { label: string; value: string; tone?:
       <span className={`text-lg font-semibold tabular-nums ${tone === "negative" ? "text-red-400" : ""}`}>{value}</span>
     </div>
   );
+}
+
+const METRIC_NAMES: Record<string, string> = {
+  success_rate: "نرخ موفقیت",
+  retry_rate: "نرخ تلاش مجدد",
+  retry_recovery_rate: "نرخ بازیابی تلاش مجدد",
+  no_attempt_rate: "نرخ سشن بدون تلاش",
+};
+
+function translateBaseline(definition: string): string {
+  if (definition.includes("previous_equal_length_period") || definition.includes("previous equal")) {
+    return "دوره بلافاصله قبل با طول برابر";
+  }
+  return definition;
 }

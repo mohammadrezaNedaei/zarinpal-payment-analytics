@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import type { PaymentHealth } from "@/api/types";
 import { getPaymentHealth } from "@/api/adapter";
-import { useGlobalFilters } from "@/lib/global-filters";
+import { resolveDateRange, useGlobalFilters } from "@/lib/global-filters";
 import { PspComparison } from "@/components/dashboard/psp-comparison";
 import { FunnelChart } from "@/components/dashboard/funnel-chart";
 import { DataState } from "@/components/ui/data-state";
@@ -19,7 +19,8 @@ export function PaymentHealthPage() {
   const loadHealth = useCallback(async () => {
     setLoadState({ status: "loading" });
     try {
-      const health = await getPaymentHealth({ merchantKey });
+      const dateRange = resolveDateRange(dateRangePreset);
+      const health = await getPaymentHealth({ merchantKey, ...dateRange });
       if (health.funnel.length === 0) {
         setLoadState({ status: "error", message: "داده قیف برای این بازه موجود نیست." });
         return;
